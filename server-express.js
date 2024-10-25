@@ -19,34 +19,35 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const record = req.body;
+  const { name, email, CPF } = req.body;
+  if (!name || !email || !CPF) {
+      return res.status(400).json({ error: "Todos os campos (name, email, CPF) são obrigatórios." });
+  }
+  const record = { name, email, CPF };
   fs.readFile("data.txt", "utf8", (err, data) => {
-    let records = [];
-    if (!err && data) records = JSON.parse(data);
-    records.push(record);
-    fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
-      if (err)
-        return res.status(500).json({ error: "Erro ao salvar o arquivo" });
-      res.json(record);
-    });
+      let records = [];
+      if (!err && data) records = JSON.parse(data);
+      records.push(record);
+      fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
+          if (err) return res.status(500).json({ error: "Erro ao salvar o arquivo" });
+          res.json(record);
+      });
   });
 });
 
 app.put("/", (req, res) => {
-  const updatedRecord = req.body;
+  const { name, email, CPF } = req.body;
+  if (!name || !email || !CPF) {
+      return res.status(400).json({ error: "Todos os campos (name, email, CPF) são obrigatórios." });
+  }
   fs.readFile("data.txt", "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erro ao ler o arquivo" });
-    let records = JSON.parse(data);
-    records = records.map((record) =>
-      record.name === updatedRecord.name
-        ? { ...record, email: updatedRecord.email }
-        : record
-    );
-    fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
-      if (err)
-        return res.status(500).json({ error: "Erro ao salvar o arquivo" });
-      res.json(updatedRecord);
-    });
+      if (err) return res.status(500).json({ error: "Erro ao ler o arquivo" });
+      let records = JSON.parse(data);
+      records = records.map(record => record.name === name ? { name, email, CPF } : record);
+      fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
+          if (err) return res.status(500).json({ error: "Erro ao salvar o arquivo" });
+          res.json({ name, email, CPF });
+      });
   });
 });
 

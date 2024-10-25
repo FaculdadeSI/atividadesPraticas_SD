@@ -102,6 +102,13 @@ app.patch("/", (req, res) => {
   });
 });
 
+// Endpoint OPTIONS para retornar métodos permitidos
+// O método OPTIONS não precisa ser implementado manualmente no Express,
+// pois o framework automaticamente responde com os métodos permitidos
+// com base nas rotas definidas. Quando uma requisição OPTIONS é
+// recebida, o Express verifica as rotas disponíveis e retorna
+// os métodos adequados automaticamente.
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });

@@ -32,6 +32,9 @@ async function createRecord(event) {
 
     const data = await response.json();
     alert(MESSAGES.createSuccess); // Alerta para o usuário
+
+    // Limpa o formulário após a criação do registro
+    document.getElementById("create-form").reset();
   } catch (error) {
     console.error("Erro ao criar registro:", error);
   }

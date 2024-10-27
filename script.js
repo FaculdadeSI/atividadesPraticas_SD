@@ -1,52 +1,70 @@
+// Constantes para URLs e mensagens
+const API_URLS = {
+  create: "/create",
+  queryByName: "/queryByName",
+};
+
+const MESSAGES = {
+  createSuccess: "Registro criado com sucesso!",
+  createError: "Erro ao criar registro.",
+  queryError: "Nenhum registro encontrado.",
+};
+
 // Função para criar um novo registro
-function createRecord(event) {
+async function createRecord(event) {
   event.preventDefault(); // Impede o envio padrão do formulário
+
   const formData = new FormData(event.target);
   const record = Object.fromEntries(formData.entries()); // Converte os dados do formulário em um objeto
 
-  fetch("/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json", // Define o tipo de conteúdo
-    },
-    body: JSON.stringify(record), // Envia os dados como JSON
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erro ao criar registro."); // Verifica se a resposta é OK
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Registro criado:", data); // Log no console do navegador
-      alert("Registro criado com sucesso!"); // Alerta para o usuário
-    })
-    .catch((error) => console.error("Erro ao criar registro:", error)); // Log de erro no console
+  try {
+    const response = await fetch(API_URLS.create, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Define o tipo de conteúdo
+      },
+      body: JSON.stringify(record), // Envia os dados como JSON
+    });
+
+    if (!response.ok) {
+      throw new Error(MESSAGES.createError); // Verifica se a resposta é OK
+    }
+
+    const data = await response.json();
+    alert(MESSAGES.createSuccess); // Alerta para o usuário
+  } catch (error) {
+    console.error("Erro ao criar registro:", error);
+  }
 }
 
 // Função para buscar registros pelo nome
-function queryRecords(event) {
+async function queryRecords(event) {
   event.preventDefault(); // Impede o envio padrão do formulário
+
   const formData = new FormData(event.target);
   const name = formData.get("name"); // Obtém o nome do formulário
 
-  fetch(`/queryByName?name=${encodeURIComponent(name)}`) // Chama a rota para buscar registros
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Nenhum registro encontrado."); // Verifica se a resposta é OK
-      }
-      return response.json();
-    })
-    .then(displayRecords) // Chama a função para exibir os registros
-    .catch((error) => {
-      alert(error.message); // Alerta o usuário em caso de erro
-      console.error("Erro ao buscar registros:", error); // Log de erro no console
-    });
+  try {
+    const response = await fetch(
+      `${API_URLS.queryByName}?name=${encodeURIComponent(name)}`
+    ); // Chama a rota para buscar registros
+
+    if (!response.ok) {
+      throw new Error(MESSAGES.queryError); // Verifica se a resposta é OK
+    }
+
+    const data = await response.json();
+    displayRecords(data); // Chama a função para exibir os registros
+  } catch (error) {
+    alert(error.message); // Alerta o usuário em caso de erro
+    console.error("Erro ao buscar registros:", error);
+  }
 }
 
 // Função para exibir os registros encontrados
 function displayRecords(data) {
   const recordList = document.createElement("ul"); // Cria uma lista para os registros
+
   data.forEach((record) => {
     const listItem = document.createElement("li");
     listItem.textContent = `${record.name} - ${record.email} - ${record.CPF}`; // Adiciona informações do registro
@@ -64,7 +82,8 @@ function displayRecords(data) {
 
   // Exibe a lista de registros no DOM
   const container = document.querySelector(".container");
-  container.appendChild(recordList);
+  container.innerHTML = ""; // Limpa registros anteriores
+  container.appendChild(recordList); // Adiciona a nova lista ao DOM
 }
 
 // Adiciona os ouvintes de eventos aos formulários

@@ -12,6 +12,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Rota para a página de registro (HTML)
+app.get("/record", (req, res) => {
+  res.sendFile(path.join(__dirname, "record.html"));
+});
+
 // Rota para criar um registro
 app.post("/create", (req, res) => {
   const record = req.body;

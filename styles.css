@@ -1,171 +1,158 @@
-/* Estilo do corpo da página */
+/* Estilos do corpo da página */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f2f5f7;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Arial', sans-serif; /* Fonte padrão */
+    margin: 0; /* Remove margens padrão */
+    padding: 20px; /* Adiciona espaçamento interno */
+    background-color: #f2f5f7; /* Cor de fundo */
+    color: #333; /* Cor do texto */
+    display: flex; /* Flexbox para centralizar */
+    justify-content: center; /* Alinhamento horizontal */
+    align-items: center; /* Alinhamento vertical */
+    min-height: 100vh; /* Altura mínima da página */
 }
 
-/* Caixa centralizada com sombra */
+/* Estilos da caixa principal */
 .container {
-    max-width: 600px;
-    width: 100%;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Largura máxima */
+    width: 100%; /* Largura total */
+    padding: 30px; /* Espaçamento interno */
+    background-color: #ffffff; /* Cor de fundo branca */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
 }
 
-/* Estilo do título principal */
+/* Estilos de títulos */
 h1 {
-    font-size: 2em;
-    color: #333;
-    text-align: center;
-    margin-bottom: 1rem;
+    font-size: 2em; /* Tamanho do título principal */
+    color: #333; /* Cor do texto */
+    text-align: center; /* Centraliza o texto */
+    margin-bottom: 1rem; /* Espaço abaixo */
 }
 
-/* Estilo do subtítulo */
 h2 {
-    font-size: 1.5em;
-    margin-top: 1.5rem;
-    color: #007BFF;
-    border-bottom: 2px solid #007BFF;
-    padding-bottom: 5px;
+    font-size: 1.5em; /* Tamanho do subtítulo */
+    margin-top: 1.5rem; /* Espaço acima */
+    color: #007BFF; /* Cor azul */
+    border-bottom: 2px solid #007BFF; /* Linha abaixo */
+    padding-bottom: 5px; /* Espaço abaixo da linha */
 }
 
-/* Estilo dos formulários */
+/* Estilos dos formulários */
 form {
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 1.5rem; /* Espaço abaixo do formulário */
+    display: flex; /* Usar flexbox */
+    flex-direction: column; /* Direção da coluna */
 }
 
-/* Estilo dos inputs */
+/* Estilos dos inputs */
 input {
-    margin-bottom: 1rem;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s;
+    margin-bottom: 1rem; /* Espaço abaixo dos inputs */
+    padding: 10px; /* Espaço interno */
+    font-size: 1rem; /* Tamanho da fonte */
+    border: 1px solid #ddd; /* Borda leve */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: border-color 0.3s; /* Transição de cor da borda */
 }
 
 input:focus {
-    border-color: #007BFF;
-    outline: none;
+    border-color: #007BFF; /* Cor da borda ao focar */
+    outline: none; /* Remove contorno padrão */
 }
 
-/* Estilo do botão de atualizar (azul) */
+/* Estilos dos botões */
+button {
+    padding: 10px; /* Espaçamento interno */
+    font-size: 1rem; /* Tamanho da fonte */
+    font-weight: bold; /* Negrito */
+    color: #ffffff; /* Cor do texto */
+    border: none; /* Remove borda padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro */
+    transition: background-color 0.3s, transform 0.1s; /* Transições suaves */
+}
+
+/* Botão de atualizar (azul) */
 button.update-btn {
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: #007BFF;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
+    background-color: #007BFF; /* Azul */
 }
 
 button.update-btn:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
 }
 
 button.update-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Efeito de clique */
 }
 
-/* Estilo do botão de excluir (vermelho) */
+/* Botão de excluir (vermelho) */
 button.delete-btn {
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: bold;
     background-color: #dc3545; /* Vermelho */
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
 }
 
 button.delete-btn:hover {
-    background-color: #c82333; /* Vermelho escuro */
+    background-color: #c82333; /* Vermelho escuro ao passar o mouse */
 }
 
 button.delete-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Efeito de clique */
 }
 
-/* Estilo do botão de criar (verde) */
+/* Botão de criar (verde) */
 button.create-btn {
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: bold;
     background-color: #28a745; /* Verde */
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
 }
 
 button.create-btn:hover {
-    background-color: #218838; /* Verde escuro */
+    background-color: #218838; /* Verde escuro ao passar o mouse */
 }
 
 button.create-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Efeito de clique */
 }
 
-/* Alinhar botões */
+/* Alinhamento dos botões no formulário */
 form button {
-    align-self: center;
-    width: 100%;
-    max-width: 150px;
+    align-self: center; /* Centraliza horizontalmente */
+    width: 100%; /* Largura total */
+    max-width: 150px; /* Largura máxima */
 }
 
-/* Estilo de texto e alinhamento central */
+/* Estilos de texto e alinhamento */
 p,
 label {
-    text-align: center;
-    font-size: 1rem;
-    color: #555;
+    text-align: center; /* Centraliza o texto */
+    font-size: 1rem; /* Tamanho da fonte */
+    color: #555; /* Cor do texto */
 }
 
-/* Estilo da lista */
+/* Estilos da lista */
 ul {
-    list-style-type: none; /* Remove os marcadores da lista */
-    padding: 0; /* Remove o padding */
-    margin-top: 1rem; /* Espaçamento acima da lista */
+    list-style-type: none; /* Remove marcadores da lista */
+    padding: 0; /* Remove padding */
+    margin-top: 1rem; /* Espaço acima da lista */
 }
 
-/* Estilo dos itens da lista */
+/* Estilos dos itens da lista */
 li {
     padding: 10px; /* Espaçamento interno */
     background-color: #f8f9fa; /* Cor de fundo clara */
     border: 1px solid #ddd; /* Borda leve */
     border-radius: 5px; /* Bordas arredondadas */
-    margin-bottom: 10px; /* Espaçamento entre os itens */
-    display: flex; /* Usar flexbox para alinhar conteúdo */
-    justify-content: space-between; /* Alinha os itens dentro do li */
+    margin-bottom: 10px; /* Espaço entre os itens */
+    display: flex; /* Flexbox para alinhar conteúdo */
+    justify-content: space-between; /* Alinha itens dentro do li */
     align-items: center; /* Centraliza verticalmente */
 }
 
-/* Estilo do botão de seleção na lista */
+/* Estilo dos botões na lista */
 li button {
-    padding: 5px 10px; /* Padding do botão */
+    padding: 5px 10px; /* Espaçamento do botão */
     font-size: 0.9rem; /* Tamanho da fonte do botão */
     background-color: #007BFF; /* Azul */
     color: #ffffff; /* Cor do texto */
-    border: none; /* Remove a borda */
+    border: none; /* Remove borda */
     border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+    cursor: pointer; /* Cursor de ponteiro */
     transition: background-color 0.3s, transform 0.1s; /* Transição suave */
 }
 
@@ -177,18 +164,19 @@ li button:active {
     transform: scale(0.95); /* Efeito de clique */
 }
 
-/* Adiciona uma leve animação ao formulário */
+/* Animação leve no formulário */
 form {
-    animation: fadeIn 0.5s ease-in;
+    animation: fadeIn 0.5s ease-in; /* Animação de entrada */
 }
 
+/* Animação de fadeIn */
 @keyframes fadeIn {
     from {
-        opacity: 0;
-        transform: translateY(-10px);
+        opacity: 0; /* Começa invisível */
+        transform: translateY(-10px); /* Desloca para cima */
     }
     to {
-        opacity: 1;
-        transform: translateY(0);
+        opacity: 1; /* Fica visível */
+        transform: translateY(0); /* Retorna à posição original */
     }
 }

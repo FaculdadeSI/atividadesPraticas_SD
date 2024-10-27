@@ -60,8 +60,8 @@ input:focus {
     outline: none;
 }
 
-/* Estilo dos botões */
-button {
+/* Estilo do botão de atualizar (azul) */
+button.update-btn {
     padding: 10px;
     font-size: 1rem;
     font-weight: bold;
@@ -73,11 +73,53 @@ button {
     transition: background-color 0.3s, transform 0.1s;
 }
 
-button:hover {
+button.update-btn:hover {
     background-color: #0056b3;
 }
 
-button:active {
+button.update-btn:active {
+    transform: scale(0.98);
+}
+
+/* Estilo do botão de excluir (vermelho) */
+button.delete-btn {
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #dc3545; /* Vermelho */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button.delete-btn:hover {
+    background-color: #c82333; /* Vermelho escuro */
+}
+
+button.delete-btn:active {
+    transform: scale(0.98);
+}
+
+/* Estilo do botão de criar (verde) */
+button.create-btn {
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #28a745; /* Verde */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button.create-btn:hover {
+    background-color: #218838; /* Verde escuro */
+}
+
+button.create-btn:active {
     transform: scale(0.98);
 }
 
@@ -89,10 +131,50 @@ form button {
 }
 
 /* Estilo de texto e alinhamento central */
-p, label {
+p,
+label {
     text-align: center;
     font-size: 1rem;
     color: #555;
+}
+
+/* Estilo da lista */
+ul {
+    list-style-type: none; /* Remove os marcadores da lista */
+    padding: 0; /* Remove o padding */
+    margin-top: 1rem; /* Espaçamento acima da lista */
+}
+
+/* Estilo dos itens da lista */
+li {
+    padding: 10px; /* Espaçamento interno */
+    background-color: #f8f9fa; /* Cor de fundo clara */
+    border: 1px solid #ddd; /* Borda leve */
+    border-radius: 5px; /* Bordas arredondadas */
+    margin-bottom: 10px; /* Espaçamento entre os itens */
+    display: flex; /* Usar flexbox para alinhar conteúdo */
+    justify-content: space-between; /* Alinha os itens dentro do li */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+/* Estilo do botão de seleção na lista */
+li button {
+    padding: 5px 10px; /* Padding do botão */
+    font-size: 0.9rem; /* Tamanho da fonte do botão */
+    background-color: #007BFF; /* Azul */
+    color: #ffffff; /* Cor do texto */
+    border: none; /* Remove a borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+    transition: background-color 0.3s, transform 0.1s; /* Transição suave */
+}
+
+li button:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+}
+
+li button:active {
+    transform: scale(0.95); /* Efeito de clique */
 }
 
 /* Adiciona uma leve animação ao formulário */

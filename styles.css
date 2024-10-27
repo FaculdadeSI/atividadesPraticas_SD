@@ -120,9 +120,10 @@ form button {
 /* Estilos de texto e alinhamento */
 p,
 label {
-    text-align: center; /* Centraliza o texto */
+    text-align: left; /* Centraliza o texto */
     font-size: 1rem; /* Tamanho da fonte */
     color: #555; /* Cor do texto */
+    margin-bottom: 0.5rem; /* Espaço abaixo */
 }
 
 /* Estilos da lista */

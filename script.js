@@ -86,6 +86,29 @@ function displayRecords(data) {
   container.appendChild(recordList); // Adiciona a nova lista ao DOM
 }
 
+// Função para buscar métodos permitidos
+async function fetchAllowedMethods() {
+  try {
+    const response = await fetch(API_URLS.create, {
+      method: "OPTIONS",
+    });
+
+    if (response.ok) {
+      const allowedMethods = response.headers.get(
+        "Access-Control-Allow-Methods"
+      ); // Obtém os métodos permitidos
+      document.getElementById("allowed-methods").textContent = allowedMethods; // Exibe os métodos permitidos
+    } else {
+      throw new Error("Erro ao buscar métodos permitidos.");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar métodos permitidos:", error);
+    document.getElementById("allowed-methods").textContent =
+      "Erro ao buscar métodos permitidos."; // Exibe erro no DOM
+  }
+}
+
 // Adiciona os ouvintes de eventos aos formulários
 document.getElementById("create-form").addEventListener("submit", createRecord);
 document.getElementById("query-form").addEventListener("submit", queryRecords);
+document.addEventListener("DOMContentLoaded", fetchAllowedMethods);

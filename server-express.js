@@ -7,6 +7,14 @@ const app = express();
 app.use(express.static(path.join(__dirname))); // Serve arquivos estáticos
 app.use(express.json()); // Interpreta o corpo das requisições como JSON
 
+// Middleware para todas as rotas que retorna os métodos permitidos
+app.options('*', (req, res) => {
+  console.log("Received OPTIONS request"); // Log para depuração
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Define os métodos permitidos
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Define os cabeçalhos permitidos
+  res.sendStatus(200); // Retorna um status 200 OK
+});
+
 // Rota para a página inicial (HTML)
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html")); // Retorna a página inicial

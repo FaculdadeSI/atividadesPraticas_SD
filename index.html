@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Dados</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Registro de Dados</h1>
+
+    <h2>Criar Registro</h2>
+    <form id="create-form">
+      <input type="text" name="name" placeholder="Nome" required />
+      <input type="text" name="email" placeholder="Email" required />
+      <input type="text" name="CPF" placeholder="CPF" required />
+      <button type="submit">Criar</button>
+    </form>
+
+    <h2>Buscar Registro</h2>
+    <form id="query-form">
+      <input type="text" name="name" placeholder="Nome" required />
+      <button type="submit">Buscar</button>
+    </form>
+
+    <h2>Atualizar Registro (PUT)</h2>
+    <form id="update-form">
+      <input type="text" name="name" placeholder="Nome" required />
+      <input type="text" name="email" placeholder="Email" required />
+      <input type="text" name="CPF" placeholder="CPF" required />
+      <button type="submit">Atualizar</button>
+    </form>
+
+    <h2>Modificar Registro (PATCH)</h2>
+    <form id="patch-form">
+      <input type="text" name="name" placeholder="Nome" required />
+      <input type="text" name="email" placeholder="Email" />
+      <input type="text" name="CPF" placeholder="CPF" />
+      <button type="submit">Modificar</button>
+    </form>
+
+    <h2>Excluir Registro</h2>
+    <form id="delete-form">
+      <input type="text" name="name" placeholder="Nome" required />
+      <button type="submit">Excluir</button>
+    </form>
+
+    <script src="script.js"></script>
+  </body>
+</html>

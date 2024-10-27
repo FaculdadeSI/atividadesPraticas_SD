@@ -1,36 +1,112 @@
+/* Estilo do corpo da página */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
     padding: 20px;
-    background-color: #f9f9f9;
-}
-
-h1 {
+    background-color: #f2f5f7;
     color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
+/* Caixa centralizada com sombra */
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo do título principal */
+h1 {
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/* Estilo do subtítulo */
 h2 {
-    margin-top: 20px;
+    font-size: 1.5em;
+    margin-top: 1.5rem;
+    color: #007BFF;
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 5px;
 }
 
+/* Estilo dos formulários */
 form {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Estilo dos inputs */
 input {
-    margin-right: 10px;
-    padding: 5px;
+    margin-bottom: 1rem;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s;
 }
 
+input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Estilo dos botões */
 button {
-    padding: 5px 10px;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
     background-color: #007BFF;
-    color: white;
+    color: #ffffff;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Alinhar botões */
+form button {
+    align-self: center;
+    width: 100%;
+    max-width: 150px;
+}
+
+/* Estilo de texto e alinhamento central */
+p, label {
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Adiciona uma leve animação ao formulário */
+form {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

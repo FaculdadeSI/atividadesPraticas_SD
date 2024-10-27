@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registro de Dados</title>
+    <title>Detalhes do Registro</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -11,16 +11,43 @@
       <h1>Detalhes do Registro</h1>
       <div id="record-details"></div>
 
-      <h2>Atualizar Registro</h2>
-      <form id="update-form">
-        <input type="hidden" name="id" />
-        <input type="text" name="name" placeholder="Nome" required />
-        <input type="text" name="email" placeholder="Email" required />
-        <input type="text" name="CPF" placeholder="CPF" required />
-        <button type="submit" class="update-btn">Atualizar</button>
-      </form>
+      <main>
+        <h2>Atualizar Registro</h2>
+        <form id="update-form">
+          <input type="hidden" name="id" />
 
-      <button id="delete-btn" class="delete-btn">Excluir Registro</button>
+          <label for="name-update">Nome</label>
+          <input
+            type="text"
+            id="name-update"
+            name="name"
+            placeholder="Nome"
+            required
+          />
+
+          <label for="email-update">Email</label>
+          <input
+            type="email"
+            id="email-update"
+            name="email"
+            placeholder="Email"
+            required
+          />
+
+          <label for="cpf-update">CPF</label>
+          <input
+            type="text"
+            id="cpf-update"
+            name="CPF"
+            placeholder="CPF"
+            required
+          />
+
+          <button type="submit" class="update-btn">Atualizar</button>
+        </form>
+
+        <button id="delete-btn" class="delete-btn">Excluir Registro</button>
+      </main>
     </div>
     <script src="recordScript.js"></script>
   </body>

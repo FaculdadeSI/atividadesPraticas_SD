@@ -10,19 +10,52 @@
     <div class="container">
       <h1>Registro de Dados</h1>
 
-      <h2>Criar Registro</h2>
-      <form id="create-form">
-        <input type="text" name="name" placeholder="Nome" required />
-        <input type="text" name="email" placeholder="Email" required />
-        <input type="text" name="CPF" placeholder="CPF" required />
-        <button type="submit" class="create-btn">Criar</button>
-      </form>
+      <main>
+        <h2>Criar Registro</h2>
+        <form id="create-form">
+          <label for="name-create">Nome</label>
+          <input
+            type="text"
+            id="name-create"
+            name="name"
+            placeholder="Nome"
+            required
+          />
 
-      <h2>Buscar Registro</h2>
-      <form id="query-form">
-        <input type="text" name="name" placeholder="Nome" required />
-        <button type="submit" class="update-btn">Buscar</button>
-      </form>
+          <label for="email-create">Email</label>
+          <input
+            type="email"
+            id="email-create"
+            name="email"
+            placeholder="Email"
+            required
+          />
+
+          <label for="cpf-create">CPF</label>
+          <input
+            type="text"
+            id="cpf-create"
+            name="CPF"
+            placeholder="CPF"
+            required
+          />
+
+          <button type="submit" class="create-btn">Criar</button>
+        </form>
+
+        <h2>Buscar Registro</h2>
+        <form id="query-form">
+          <label for="name-query">Nome</label>
+          <input
+            type="text"
+            id="name-query"
+            name="name"
+            placeholder="Nome"
+            required
+          />
+          <button type="submit" class="update-btn">Buscar</button>
+        </form>
+      </main>
     </div>
     <script src="script.js"></script>
   </body>

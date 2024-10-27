@@ -1,110 +1,126 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get("id"); // Obtenha o ID da URL
+// Constantes para URLs e mensagens
+const API_URLS = {
+  query: "/query",
+  delete: "/delete",
+  update: "/update",
+};
 
-  // Lógica para buscar o registro usando o ID
-  fetch(`/query?id=${id}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erro na resposta da rede");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (data.error) {
-        alert(data.error);
-        window.location.href = "/";
-      } else {
-        document.getElementById(
-          "record-details"
-        ).innerText = `Nome: ${data.name}, Email: ${data.email}, CPF: ${data.CPF}`;
+const MESSAGES = {
+  deleteConfirmation: "Você tem certeza que deseja excluir este registro?",
+  deleteSuccess: "Registro excluído com sucesso!",
+  updateSuccess: "Registro atualizado com sucesso!",
+  emptyFields: "Por favor, preencha todos os campos.",
+  sameData: "Todos os novos dados devem ser diferentes dos antigos.",
+  networkError: "Erro na resposta da rede",
+};
 
-        // Preencher os campos do formulário de atualização com os dados do registro
-        document.querySelector("#update-form [name=id]").value = data.id; // Para o formulário de atualização
-        document.querySelector("#update-form [name=name]").value = data.name;
-        document.querySelector("#update-form [name=email]").value = data.email;
-        document.querySelector("#update-form [name=CPF]").value = data.CPF;
+// Função para buscar o registro com base no ID
+async function fetchRecordById(id) {
+  const response = await fetch(`${API_URLS.query}?id=${id}`);
+  if (!response.ok) throw new Error(MESSAGES.networkError);
+  return response.json();
+}
 
-        // Acessível aqui para a exclusão
-        setupDeleteButton(id); // Passa o id para a função que configura o botão de delete
-      }
-    })
-    .catch((error) => console.error("Erro ao buscar registro:", error));
-});
+// Função para preencher os detalhes do registro na tela
+function displayRecordDetails(data) {
+  document.getElementById(
+    "record-details"
+  ).innerText = `Nome: ${data.name}, Email: ${data.email}, CPF: ${data.CPF}`;
+  document.querySelector("#update-form [name=id]").value = data.id;
+  document.querySelector("#update-form [name=name]").value = data.name;
+  document.querySelector("#update-form [name=email]").value = data.email;
+  document.querySelector("#update-form [name=CPF]").value = data.CPF;
+}
 
-// Função para configurar a lógica de exclusão
+// Função para configurar o botão de exclusão
 function setupDeleteButton(id) {
-  document.getElementById("delete-btn").addEventListener("click", () => {
-    // Pergunta de confirmação
-    const confirmDelete = confirm(
-      "Você tem certeza que deseja excluir este registro?"
-    );
-    if (!confirmDelete) {
-      return; // Se o usuário não confirmar, sai da função
-    }
+  document.getElementById("delete-btn").addEventListener("click", async () => {
+    const confirmDelete = confirm(MESSAGES.deleteConfirmation);
+    if (!confirmDelete) return;
 
-    fetch(`/delete`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }), // Envie o ID para a exclusão
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Registro excluído com sucesso!");
-          window.location.href = "/"; // Redireciona para a página inicial
-        } else {
-          throw new Error("Erro ao excluir o registro.");
-        }
-      })
-      .catch((error) => console.error("Erro:", error));
+    try {
+      const response = await fetch(API_URLS.delete, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) throw new Error("Erro ao excluir o registro.");
+      alert(MESSAGES.deleteSuccess);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Erro:", error);
+    }
   });
 }
 
-// Lógica para atualizar o registro
-document
-  .getElementById("update-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const record = Object.fromEntries(formData.entries());
-
-    // Verifica se todos os campos foram preenchidos
-    if (!record.name || !record.email || !record.CPF) {
-      alert("Por favor, preencha todos os campos.");
-      return;
-    }
-
-    // Obtém os dados antigos do registro
-    const oldName = document.querySelector("#update-form [name=name]").dataset
-      .oldValue;
-    const oldEmail = document.querySelector("#update-form [name=email]").dataset
-      .oldValue;
-    const oldCPF = document.querySelector("#update-form [name=CPF]").dataset
-      .oldValue;
-
-    // Checa se todos os dados novos são diferentes dos antigos
-    if (
-      record.name === oldName ||
-      record.email === oldEmail ||
-      record.CPF === oldCPF
-    ) {
-      alert("Todos os novos dados devem ser diferentes dos antigos.");
-      return;
-    }
-
-    fetch("/update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(record),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert("Registro atualizado com sucesso!");
-        location.reload();
-      })
-      .catch((error) => console.error("Erro ao atualizar registro:", error));
+// Função para atualizar o registro
+async function updateRecord(record) {
+  const response = await fetch(API_URLS.update, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record),
   });
+  return response.json();
+}
+
+// Função para validar os dados do formulário
+function validateForm(record, oldValues) {
+  if (!record.name || !record.email || !record.CPF) {
+    alert(MESSAGES.emptyFields);
+    return false;
+  }
+
+  if (
+    record.name === oldValues.name ||
+    record.email === oldValues.email ||
+    record.CPF === oldValues.CPF
+  ) {
+    alert(MESSAGES.sameData);
+    return false;
+  }
+
+  return true;
+}
+
+// Lógica principal ao carregar a página
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id"); // Obtém o ID da URL
+
+  try {
+    const data = await fetchRecordById(id);
+    if (data.error) {
+      alert(data.error);
+      window.location.href = "/";
+      return;
+    }
+
+    displayRecordDetails(data);
+    setupDeleteButton(id);
+
+    // Armazena os valores antigos para validação
+    const oldValues = { name: data.name, email: data.email, CPF: data.CPF };
+
+    // Lógica para atualizar o registro
+    document
+      .getElementById("update-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const record = Object.fromEntries(formData.entries());
+
+        if (validateForm(record, oldValues)) {
+          try {
+            await updateRecord(record);
+            alert(MESSAGES.updateSuccess);
+            location.reload(); // Recarrega a página para refletir as mudanças
+          } catch (error) {
+            console.error("Erro ao atualizar registro:", error);
+          }
+        }
+      });
+  } catch (error) {
+    console.error("Erro ao buscar registro:", error);
+  }
+});

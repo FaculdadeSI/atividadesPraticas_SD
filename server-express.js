@@ -113,6 +113,38 @@ app.put("/update", (req, res) => {
   });
 });
 
+// Rota para atualizar um registro parcialmente
+app.patch("/updatePartial", (req, res) => {
+  const recordToUpdate = req.body; // Obtém os dados do registro a ser atualizado parcialmente
+
+  fs.readFile("data.txt", "utf8", (err, data) => {
+    if (err) {
+      console.error("Erro ao ler o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao ler o arquivo." }); // Erro ao ler o arquivo
+    }
+
+    let records = data ? JSON.parse(data) : []; // Inicializa a lista de registros
+    const recordIndex = records.findIndex((r) => r.id == recordToUpdate.id); // Encontra o índice do registro
+
+    if (recordIndex === -1) {
+      return res.status(404).json({ error: "Registro não encontrado." }); // Retorno se não houver registro
+    }
+
+    // Atualiza apenas os campos que foram fornecidos no corpo da requisição
+    const updatedRecord = { ...records[recordIndex], ...recordToUpdate };
+    records[recordIndex] = updatedRecord; // Atualiza o registro encontrado
+
+    fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
+      if (err) {
+        console.error("Erro ao escrever no arquivo:", err);
+        return res.status(500).json({ error: "Erro ao escrever no arquivo." }); // Erro ao escrever no arquivo
+      }
+
+      res.json(updatedRecord); // Retorna o registro atualizado
+    });
+  });
+});
+
 // Rota para excluir um registro
 app.delete("/delete", (req, res) => {
   const id = req.body.id; // Obtém o ID do corpo da requisição

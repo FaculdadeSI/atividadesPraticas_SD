@@ -46,6 +46,37 @@
           <button type="submit" class="update-btn">Atualizar</button>
         </form>
 
+        <h2>Atualizar Registro (Parcial)</h2>
+        <form id="update-partial-form">
+          <input type="hidden" name="id" />
+
+          <label for="partial-name-update">Nome</label>
+          <input
+            type="text"
+            id="partial-name-update"
+            name="name"
+            placeholder="Nome (opcional)"
+          />
+
+          <label for="partial-email-update">Email</label>
+          <input
+            type="email"
+            id="partial-email-update"
+            name="email"
+            placeholder="Email (opcional)"
+          />
+
+          <label for="partial-cpf-update">CPF</label>
+          <input
+            type="text"
+            id="partial-cpf-update"
+            name="CPF"
+            placeholder="CPF (opcional)"
+          />
+
+          <button type="submit" class="update-btn">Atualizar Parcial</button>
+        </form>
+
         <button id="delete-btn" class="delete-btn">Excluir Registro</button>
       </main>
     </div>

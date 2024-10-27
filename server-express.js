@@ -4,7 +4,7 @@ const path = require("path");
 const app = express();
 
 // Middleware para servir arquivos estáticos
-app.use(express.static(path.join(__dirname))); // Isso vai servir todos os arquivos na raiz do projeto
+app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 
 // Rota para a página inicial (HTML)
@@ -19,7 +19,7 @@ app.get("/record", (req, res) => {
 
 // Rota para criar um registro
 app.post("/create", (req, res) => {
-  const record = req.body;
+  const record = { ...req.body, id: Date.now() }; // Adiciona um ID único baseado no timestamp
   console.log("Criando registro:", record);
 
   fs.readFile("data.txt", "utf8", (err, data) => {
@@ -40,10 +40,10 @@ app.post("/create", (req, res) => {
   });
 });
 
-// Rota para buscar um registro
-app.get("/query", (req, res) => {
-  const name = req.query.name;
-  console.log("Buscando registro por nome:", name);
+// Rota para buscar registros pelo nome
+app.get("/queryByName", (req, res) => {
+  const name = req.query.name; // Obtém o nome
+  console.log("Buscando registros por nome:", name);
 
   fs.readFile("data.txt", "utf8", (err, data) => {
     if (err) {
@@ -51,11 +51,30 @@ app.get("/query", (req, res) => {
       return res.status(500).json({ error: "Erro ao ler o arquivo." });
     }
     const records = data ? JSON.parse(data) : [];
-    const record = records.find((r) => r.name === name);
-    if (record) {
-      return res.json(record);
+    const matchedRecords = records.filter((r) => r.name === name); // Compara com o nome
+    if (matchedRecords.length > 0) {
+      return res.json(matchedRecords); // Retorna todos os registros encontrados
     }
-    return res.status(404).json({ error: "data not found" });
+    return res.status(404).json({ error: "Nenhum registro encontrado." });
+  });
+});
+
+// Rota para buscar um registro pelo ID (adicionada)
+app.get("/query", (req, res) => {
+  const id = req.query.id; // Obtém o ID
+  console.log("Buscando registro por ID:", id);
+
+  fs.readFile("data.txt", "utf8", (err, data) => {
+    if (err) {
+      console.error("Erro ao ler o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao ler o arquivo." });
+    }
+    const records = data ? JSON.parse(data) : [];
+    const record = records.find((r) => r.id == id); // Compara com o ID
+    if (record) {
+      return res.json(record); // Retorna o registro encontrado
+    }
+    return res.status(404).json({ error: "Registro não encontrado." });
   });
 });
 
@@ -69,10 +88,17 @@ app.put("/update", (req, res) => {
       console.error("Erro ao ler o arquivo:", err);
       return res.status(500).json({ error: "Erro ao ler o arquivo." });
     }
+
     let records = data ? JSON.parse(data) : [];
-    records = records.map((r) =>
-      r.name === recordToUpdate.name ? recordToUpdate : r
-    );
+    const recordIndex = records.findIndex((r) => r.id == recordToUpdate.id);
+
+    if (recordIndex === -1) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    // Atualiza todos os campos
+    records[recordIndex] = recordToUpdate; // Substitui o registro antigo pelo novo
+
     fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
       if (err) {
         console.error("Erro ao escrever no arquivo:", err);
@@ -84,38 +110,10 @@ app.put("/update", (req, res) => {
   });
 });
 
-// Rota para modificar um registro (PATCH)
-app.patch("/modify", (req, res) => {
-  const recordToModify = req.body;
-  console.log("Modificando registro:", recordToModify);
-
-  fs.readFile("data.txt", "utf8", (err, data) => {
-    if (err) {
-      console.error("Erro ao ler o arquivo:", err);
-      return res.status(500).json({ error: "Erro ao ler o arquivo." });
-    }
-    let records = data ? JSON.parse(data) : [];
-    records = records.map((r) => {
-      if (r.name === recordToModify.name) {
-        return { ...r, ...recordToModify };
-      }
-      return r;
-    });
-    fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
-      if (err) {
-        console.error("Erro ao escrever no arquivo:", err);
-        return res.status(500).json({ error: "Erro ao escrever no arquivo." });
-      }
-      console.log("Registro modificado com sucesso!");
-      res.json(recordToModify);
-    });
-  });
-});
-
 // Rota para excluir um registro (DELETE)
 app.delete("/delete", (req, res) => {
-  const recordToDelete = req.body;
-  console.log("Excluindo registro:", recordToDelete);
+  const id = req.body.id; // Obtém o ID do corpo da requisição
+  console.log("Excluindo registro com ID:", id);
 
   fs.readFile("data.txt", "utf8", (err, data) => {
     if (err) {
@@ -123,25 +121,19 @@ app.delete("/delete", (req, res) => {
       return res.status(500).json({ error: "Erro ao ler o arquivo." });
     }
     let records = data ? JSON.parse(data) : [];
-    records = records.filter((r) => r.name !== recordToDelete.name);
+    records = records.filter((r) => r.id != id); // Remove o registro com o ID correspondente
     fs.writeFile("data.txt", JSON.stringify(records, null, 2), (err) => {
       if (err) {
         console.error("Erro ao escrever no arquivo:", err);
         return res.status(500).json({ error: "Erro ao escrever no arquivo." });
       }
       console.log("Registro excluído com sucesso!");
-      res.json(recordToDelete);
+      res.json({ message: "Registro excluído com sucesso!" });
     });
   });
 });
 
-// Endpoint OPTIONS para retornar métodos permitidos
-// O método OPTIONS não precisa ser implementado manualmente no Express,
-// pois o framework automaticamente responde com os métodos permitidos
-// com base nas rotas definidas. Quando uma requisição OPTIONS é
-// recebida, o Express verifica as rotas disponíveis e retorna
-// os métodos adequados automaticamente.
-
+// Inicia o servidor na porta 3000
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });

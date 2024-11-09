@@ -62,7 +62,7 @@ def interagir_com_usuario():
                 print(colorir_texto(proxy.entrar_na_sala(user_id), "verde"))
             elif opcao == "2":
                 usuarios = proxy.listar_usuarios()
-                print(colorir_texto("\nUsuários na sala:", "ciano"))
+                print(colorir_texto("\nUsuários na sala:\n\n", "ciano"))
                 print(
                     colorir_texto(
                         ", ".join(usuarios) if usuarios else "Nenhum usuário na sala.",
@@ -71,8 +71,9 @@ def interagir_com_usuario():
                 )
             elif opcao == "3":
                 if user_id is not None:
-                    resposta = proxy.remover_usuario(user_id)
-                    print(colorir_texto(resposta, "magenta"))
+                    proxy.remover_usuario(user_id)
+                    print(colorir_texto("Saindo do sistema... Até logo!", "magenta"))
+                    break
                 else:
                     print(
                         colorir_texto(

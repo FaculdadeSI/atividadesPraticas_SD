@@ -76,19 +76,13 @@ class ChatService(rpyc.Service):
         return ChatService.private_messages.get(user_id, [])
 
     def exposed_remover_usuario(self, user_id):
-        # Remove o usuário da sala e da lista de usuários
-        if user_id in ChatService.users:
-            if ChatService.users[user_id]["na_sala"]:
-                ChatService.users[user_id]["na_sala"] = False
-                print(
-                    f"[LOG] Usuário '{ChatService.users[user_id]['nome']}' saiu da sala."
-                )
-            del ChatService.users[user_id]
-            print(
-                f"[LOG] Usuário '{ChatService.users[user_id]['nome']}' removido do sistema."
-            )
-            return f"Usuário {ChatService.users[user_id]['nome']} removido com sucesso."
-        return "Usuário não encontrado."
+        if user_id in self.users:
+            nome_usuario = self.users[user_id]["nome"]
+            del self.users[user_id]
+            print(f"[LOG] Usuário '{nome_usuario}' removido do sistema.")
+            return f"Usuário {nome_usuario} removido com sucesso."
+        else:
+            return f"Erro: Usuário com ID {user_id} não encontrado."
 
     def exposed_verificar_status_usuario(self, user_id):
         # Retorna True se o usuário estiver na sala, False caso contrário

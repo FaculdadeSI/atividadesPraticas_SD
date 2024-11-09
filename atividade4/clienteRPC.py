@@ -70,9 +70,17 @@ def interagir_com_usuario():
                     )
                 )
             elif opcao == "3":
-                proxy.remover_usuario(user_id)
-                print(colorir_texto("Saindo do sistema... Até logo!", "magenta"))
+                if user_id is not None:
+                    resposta = proxy.remover_usuario(user_id)
+                    print(colorir_texto(resposta, "magenta"))
+                else:
+                    print(
+                        colorir_texto(
+                            "[ERRO] Usuário não encontrado ou já removido.", "vermelho"
+                        )
+                    )
                 break
+
             else:
                 print(
                     colorir_texto("[ERRO] Opção inválida! Tente novamente.", "vermelho")

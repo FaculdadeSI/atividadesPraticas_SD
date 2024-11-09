@@ -28,8 +28,8 @@ def exibir_menu(status_na_sala):
         print(colorir_texto(" Menu da Sala ".center(40, "="), "ciano"))
         print(colorir_texto("1. Listar mensagens públicas", "negrito"))
         print(colorir_texto("2. Enviar mensagem pública", "negrito"))
-        print(colorir_texto("3. Enviar mensagem privada", "negrito"))
-        print(colorir_texto("4. Listar mensagens privadas", "negrito"))
+        print(colorir_texto("3. Listar mensagens privadas", "negrito"))
+        print(colorir_texto("4. Enviar mensagem privada", "negrito"))
         print(colorir_texto("5. Sair da sala", "negrito"))
         print(colorir_texto("6. Sair do sistema", "negrito"))
     else:
@@ -100,6 +100,14 @@ def interagir_com_usuario():
                 mensagem = input("Digite a mensagem pública: ")
                 print(colorir_texto(proxy.enviar_mensagem(user_id, mensagem), "verde"))
             elif opcao == "3":
+                mensagens_privadas = proxy.listar_mensagens_privadas(user_id)
+                print(colorir_texto("\nMensagens privadas:", "ciano"))
+                if mensagens_privadas:
+                    for msg in mensagens_privadas:
+                        print(colorir_texto(f"- {msg}", "default"))
+                else:
+                    print(colorir_texto("Nenhuma mensagem privada.", "default"))
+            elif opcao == "4":
                 try:
                     destinatario_id = int(input("Digite o ID do destinatário: "))
                     mensagem = input("Digite a mensagem privada: ")
@@ -117,14 +125,6 @@ def interagir_com_usuario():
                             "[ERRO] ID do destinatário deve ser um número.", "vermelho"
                         )
                     )
-            elif opcao == "4":
-                mensagens_privadas = proxy.listar_mensagens_privadas(user_id)
-                print(colorir_texto("\nMensagens privadas:", "ciano"))
-                if mensagens_privadas:
-                    for msg in mensagens_privadas:
-                        print(colorir_texto(f"- {msg}", "default"))
-                else:
-                    print(colorir_texto("Nenhuma mensagem privada.", "default"))
             elif opcao == "5":
                 print(colorir_texto(proxy.sair_da_sala(user_id), "amarelo"))
             elif opcao == "6":

@@ -1,3 +1,8 @@
+# O cliente utiliza o método rpyc.connect() para estabelecer uma conexão com o servidor. Após a conexão, o cliente chama 
+# métodos remotos expostos pelo servidor para realizar as operações. A interação com o usuário é feita por meio de um menu 
+# no terminal, e as opções do menu acionam os métodos correspondentes no servidor.
+
+
 import rpyc
 
 

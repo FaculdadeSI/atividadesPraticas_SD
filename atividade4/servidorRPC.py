@@ -1,3 +1,10 @@
+# Utiliza a biblioteca rpyc para fornecer um serviço distribuído RPC (Remote Procedure Call). O RPC permite que os métodos 
+# expostos pelo servidor sejam chamados remotamente, como se estivessem sendo executados localmente. A classe ChatService 
+# expõe diversos métodos que podem ser acessados remotamente pelos clientes. O servidor usa o ThreadedServer da biblioteca 
+# rpyc para aceitar múltiplas conexões simultâneas, permitindo a comunicação entre os usuários de maneira distribuída.
+
+
+
 import rpyc
 from rpyc.utils.server import ThreadedServer
 

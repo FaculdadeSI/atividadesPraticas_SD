@@ -80,3 +80,20 @@ class Blockchain:
         Retorna o último bloco da cadeia.
         """
         return self.chain[-1]  # Acessa o último elemento da lista de blocos
+
+    def proof_of_work(self, last_proof):
+        """
+        Algoritmo de Prova de Trabalho Simples:
+        - Encontre um número p' tal que hash(pp') contenha 4 zeros à esquerda, onde p é a prova anterior.
+        - p é a prova anterior e p' é a nova prova.
+
+        :param last_proof: <int> A prova anterior.
+        :return: <int> A nova prova encontrada.
+        """
+        proof = 0  # Inicializa a nova prova com 0.
+
+        # Continua incrementando até encontrar uma prova válida.
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1  # Incrementa a prova a cada iteração.
+
+        return proof  # Retorna a nova prova válida encontrada.

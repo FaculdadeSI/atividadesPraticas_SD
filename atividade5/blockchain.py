@@ -180,7 +180,7 @@ class Blockchain:
         # Solicita e verifica as cadeias de todos os nós na rede.
         for node in vizinhos:
             response = requests.get(
-                f"http://{node}/chain"
+                f"{node}/chain"
             )  # Faz uma requisição HTTP para o nó.
 
             if response.status_code == 200:  # Verifica se a resposta foi bem-sucedida.
@@ -200,3 +200,11 @@ class Blockchain:
             return True  # Retorna True indicando que a cadeia foi substituída.
 
         return False  # Retorna False se nenhuma cadeia foi substituída.
+
+    def register_node(self, node):
+        """
+        Adiciona um novo nó à lista de nós.
+
+        :param node: Endereço do nó (ex: 'http://192.168.1.2:5000')
+        """
+        self.nodes.add(node)

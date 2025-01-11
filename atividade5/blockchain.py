@@ -6,11 +6,14 @@ from time import time
 
 class Blockchain:
     def __init__(self):
-        self.current_transactions = []  # Inicializa a lista de transações pendentes
-        self.chain = []  # Inicializa a cadeia de blocos
-        self.nodes = (
-            set()
-        )  # Inicializa o conjunto de nós (endpoints da rede blockchain)
+        """
+        Inicializa a blockchain, criando um bloco gênese e
+        configurando listas e variáveis necessárias para transações
+        e validação de blocos.
+        """
+        self.current_transactions = []  # Lista de transações pendentes
+        self.chain = []  # Cadeia de blocos
+        self.nodes = set()  # Conjunto de nós na rede blockchain
 
         # Cria o bloco gênese (primeiro bloco da blockchain)
         self.new_block(previous_hash=1, proof=100)
@@ -26,19 +29,15 @@ class Blockchain:
         # Define a estrutura do novo bloco como um dicionário
         block = {
             "index": len(self.chain) + 1,  # Índice do bloco (posição na cadeia)
-            "timestamp": time(),  # Registro do horário de criação do bloco
-            "transactions": self.current_transactions,  # Lista de transações pendentes que serão incluídas no bloco
-            "proof": proof,  # Prova de trabalho que valida este bloco
+            "timestamp": time(),  # Horário de criação do bloco
+            "transactions": self.current_transactions,  # Transações a serem incluídas no bloco
+            "proof": proof,  # Prova de trabalho que valida o bloco
             "previous_hash": previous_hash
             or self.hash(self.chain[-1]),  # Hash do bloco anterior
         }
 
-        # Reinicia a lista de transações pendentes, pois elas já foram adicionadas ao bloco
-        self.current_transactions = []
-
-        self.chain.append(
-            block
-        )  # Adiciona o novo bloco à cadeia de blocos (self.chain)
+        self.current_transactions = []  # Reinicia as transações pendentes
+        self.chain.append(block)  # Adiciona o novo bloco à cadeia
         return block  # Retorna o bloco recém-criado
 
     def new_transaction(self, sender, recipient, amount):
@@ -48,7 +47,7 @@ class Blockchain:
         :param sender: Endereço do remetente
         :param recipient: Endereço do destinatário
         :param amount: Valor da transação
-        :return: O índice do bloco que irá conter esta transação
+        :return: Índice do bloco que conterá esta transação
         """
         # Adiciona a nova transação à lista de transações pendentes
         self.current_transactions.append(
@@ -59,8 +58,7 @@ class Blockchain:
             }
         )
 
-        # Retorna o índice do próximo bloco que conterá esta transação
-        return self.last_block["index"] + 1
+        return self.last_block["index"] + 1  # Retorna o índice do próximo bloco
 
     @staticmethod
     def hash(block):
@@ -68,12 +66,12 @@ class Blockchain:
         Cria um hash SHA-256 de um bloco.
 
         :param block: O bloco a ser transformado em hash
+        :return: O hash do bloco
         """
-        # Converte o bloco em uma string ordenada (para consistência no hashing)
-        bloco_string = json.dumps(block, sort_keys=True).encode()
-
-        # Retorna o hash SHA-256 da string do bloco
-        return hashlib.sha256(bloco_string).hexdigest()
+        bloco_string = json.dumps(
+            block, sort_keys=True
+        ).encode()  # Converte o bloco para uma string
+        return hashlib.sha256(bloco_string).hexdigest()  # Retorna o hash SHA-256
 
     @property
     def last_block(self):
@@ -84,12 +82,11 @@ class Blockchain:
 
     def proof_of_work(self, last_block):
         """
-        Algoritmo de mineração SHA-256 do Bitcoin:
-        - Encontre um número p' tal que o hash de (p + p') contenha 4 zeros à esquerda,
-        onde p é a prova anterior e p' é a nova prova.
+        Algoritmo de Prova de Trabalho (Proof of Work) do Bitcoin:
+        Encontra um número 'p' tal que o hash de (p + p') contenha 4 zeros à esquerda.
 
-        :param last_block: <dict> O último bloco.
-        :return: <int> A nova prova encontrada.
+        :param last_block: O último bloco.
+        :return: A nova prova encontrada.
         """
         # Obtém a prova anterior do último bloco.
         ultima_prova = last_block["proof"]
@@ -100,44 +97,42 @@ class Blockchain:
         # Inicializa a nova prova como 0.
         prova = 0
 
-        # Incrementa a prova até encontrar uma válida.
+        # Encontra a nova prova válida
         while self.valid_proof(ultima_prova, prova, ultimo_hash) is False:
             prova += 1
 
-        # Retorna a nova prova encontrada.
-        return prova
+        return prova  # Retorna a nova prova encontrada
 
     @staticmethod
     def valid_proof(last_proof, proof, last_hash):
         """
         Valida a Prova de Trabalho.
 
-        :param last_proof: <int> A prova anterior.
-        :param proof: <int> A prova atual.
-        :param last_hash: <str> O hash do último bloco.
-        :return: <bool> Verdadeiro se a prova for válida, Falso caso contrário.
+        :param last_proof: A prova anterior.
+        :param proof: A prova atual.
+        :param last_hash: O hash do último bloco.
+        :return: True se a prova for válida, False caso contrário.
         """
-        # Concatena a prova anterior, a prova atual e o hash do último bloco em uma string.
-        tentativa = f"{last_proof}{proof}{last_hash}".encode()
+        tentativa = (
+            f"{last_proof}{proof}{last_hash}".encode()
+        )  # Concatena as provas e o hash
+        tentativa_hash = hashlib.sha256(
+            tentativa
+        ).hexdigest()  # Calcula o hash da tentativa
 
-        # Calcula o hash SHA-256 da string gerada.
-        tentativa_hash = hashlib.sha256(tentativa).hexdigest()
-
-        # Verifica se os primeiros quatro caracteres do hash são iguais a "0000".
-        return tentativa_hash[:4] == "0000"
+        return tentativa_hash[:4] == "0000"  # Verifica se o hash começa com 4 zeros
 
     def valid_chain(self, chain):
         """
         Determina se um blockchain fornecido é válido.
 
-        :param chain: <list> Um blockchain (lista de blocos).
-        :return: <bool> Verdadeiro se o blockchain for válido, Falso caso contrário.
+        :param chain: Um blockchain (lista de blocos).
+        :return: True se o blockchain for válido, False caso contrário.
         """
-        # Começa com o primeiro bloco da cadeia (genesis block).
-        ultimo_bloco = chain[0]
-        indice_atual = 1  # Índice para iterar pelos blocos subsequentes.
+        ultimo_bloco = chain[0]  # Começa com o primeiro bloco da cadeia (genesis block)
+        indice_atual = 1  # Índice para iterar pelos blocos subsequentes
 
-        # Itera por todos os blocos na cadeia.
+        # Itera pelos blocos da cadeia
         while indice_atual < len(chain):
             bloco = chain[indice_atual]  # Obtém o bloco atual.
 
@@ -146,11 +141,11 @@ class Blockchain:
             print(f"Bloco atual: {bloco}")
             print("\n-----------\n")
 
-            # Verifica se o hash do bloco anterior está correto.
+            # Verifica se o hash do bloco anterior está correto
             if bloco["previous_hash"] != self.hash(ultimo_bloco):
                 return False
 
-            # Verifica se a Prova de Trabalho do bloco atual é válida.
+            # Verifica se a Prova de Trabalho do bloco atual é válida
             if not self.valid_proof(ultimo_bloco["proof"], bloco["proof"]):
                 return False
 
@@ -158,21 +153,19 @@ class Blockchain:
             ultimo_bloco = bloco
             indice_atual += 1
 
-        # Se todos os blocos forem válidos, retorna True.
-        return True
+        return True  # Se todos os blocos forem válidos, retorna True
 
     def resolve_conflicts(self):
         """
-        Este é o nosso algoritmo de consenso. Ele resolve conflitos
-        substituindo nossa cadeia pela cadeia mais longa encontrada na rede.
+        Resolve conflitos substituindo nossa cadeia pela cadeia mais longa encontrada na rede.
 
-        :return: <bool> True se nossa cadeia foi substituída, False caso contrário.
+        :return: True se nossa cadeia foi substituída, False caso contrário.
         """
-        # Obtém os nós vizinhos na rede.
-        vizinhos = self.nodes
+        vizinhos = self.nodes  # Obtém os nós vizinhos na rede
         nova_cadeia = (
-            None  # Inicializa uma variável para armazenar uma nova cadeia válida.
+            None  # Inicializa uma variável para armazenar uma nova cadeia válida
         )
+        comprimento_maximo = len(self.chain)  # Comprimento máximo da cadeia atual
 
         # Estamos interessados apenas em cadeias maiores que a nossa.
         comprimento_maximo = len(self.chain)
@@ -181,25 +174,23 @@ class Blockchain:
         for node in vizinhos:
             response = requests.get(
                 f"{node}/chain"
-            )  # Faz uma requisição HTTP para o nó.
+            )  # Faz uma requisição HTTP para o nó
 
-            if response.status_code == 200:  # Verifica se a resposta foi bem-sucedida.
-                comprimento = response.json()[
-                    "length"
-                ]  # Obtém o comprimento da cadeia do nó.
-                cadeia = response.json()["chain"]  # Obtém a cadeia do nó.
+            if response.status_code == 200:  # Se a resposta for bem-sucedida
+                comprimento = response.json()["length"]  # Obtém o comprimento da cadeia
+                cadeia = response.json()["chain"]  # Obtém a cadeia do nó
 
-                # Verifica se a cadeia do nó é maior e válida.
+                # Verifica se a cadeia do nó é maior e válida
                 if comprimento > comprimento_maximo and self.valid_chain(cadeia):
-                    comprimento_maximo = comprimento  # Atualiza o comprimento máximo.
-                    nova_cadeia = cadeia  # Atualiza a nova cadeia válida.
+                    comprimento_maximo = comprimento  # Atualiza o comprimento máximo
+                    nova_cadeia = cadeia  # Atualiza a nova cadeia válida
 
-        # Substitui nossa cadeia se encontrarmos uma cadeia válida maior que a atual.
+        # Substitui a cadeia local pela nova cadeia mais longa encontrada
         if nova_cadeia:
             self.chain = nova_cadeia
-            return True  # Retorna True indicando que a cadeia foi substituída.
+            return True  # A cadeia foi substituída
 
-        return False  # Retorna False se nenhuma cadeia foi substituída.
+        return False  # Nenhuma cadeia foi substituída
 
     def register_node(self, node):
         """
@@ -207,4 +198,4 @@ class Blockchain:
 
         :param node: Endereço do nó (ex: 'http://192.168.1.2:5000')
         """
-        self.nodes.add(node)
+        self.nodes.add(node)  # Adiciona o nó ao conjunto de nós

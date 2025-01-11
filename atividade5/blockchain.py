@@ -81,22 +81,30 @@ class Blockchain:
         """
         return self.chain[-1]  # Acessa o último elemento da lista de blocos
 
-    def proof_of_work(self, last_proof):
+    def proof_of_work(self, last_block):
         """
-        Algoritmo de Prova de Trabalho Simples:
-        - Encontre um número p' tal que hash(pp') contenha 4 zeros à esquerda, onde p é a prova anterior.
-        - p é a prova anterior e p' é a nova prova.
+        Algoritmo de mineração SHA-256 do Bitcoin:
+        - Encontre um número p' tal que o hash de (p + p') contenha 4 zeros à esquerda,
+        onde p é a prova anterior e p' é a nova prova.
 
-        :param last_proof: <int> A prova anterior.
+        :param last_block: <dict> O último bloco.
         :return: <int> A nova prova encontrada.
         """
-        proof = 0  # Inicializa a nova prova com 0.
+        # Obtém a prova anterior do último bloco.
+        ultima_prova = last_block["proof"]
 
-        # Continua incrementando até encontrar uma prova válida.
-        while self.valid_proof(last_proof, proof) is False:
-            proof += 1  # Incrementa a prova a cada iteração.
+        # Calcula o hash do último bloco.
+        ultimo_hash = self.hash(last_block)
 
-        return proof  # Retorna a nova prova válida encontrada.
+        # Inicializa a nova prova como 0.
+        prova = 0
+
+        # Incrementa a prova até encontrar uma válida.
+        while self.valid_proof(ultima_prova, prova, ultimo_hash) is False:
+            prova += 1
+
+        # Retorna a nova prova encontrada.
+        return prova
 
     @staticmethod
     def valid_proof(last_proof, proof):

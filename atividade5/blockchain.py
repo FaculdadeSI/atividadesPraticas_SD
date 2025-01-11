@@ -107,22 +107,23 @@ class Blockchain:
         return prova
 
     @staticmethod
-    def valid_proof(last_proof, proof):
+    def valid_proof(last_proof, proof, last_hash):
         """
-        Valida a prova.
+        Valida a Prova de Trabalho.
 
-        :param last_proof: <int> Prova anterior.
-        :param proof: <int> Prova atual.
+        :param last_proof: <int> A prova anterior.
+        :param proof: <int> A prova atual.
+        :param last_hash: <str> O hash do último bloco.
         :return: <bool> Verdadeiro se a prova for válida, Falso caso contrário.
         """
-        # Concatena a prova anterior e a prova atual em uma string, depois codifica para bytes.
-        tentativa = f"{last_proof}{proof}".encode()
+        # Concatena a prova anterior, a prova atual e o hash do último bloco em uma string.
+        tentativa = f"{last_proof}{proof}{last_hash}".encode()
 
-        # Gera o hash SHA-256 da tentativa.
-        hash_tentativa = hashlib.sha256(tentativa).hexdigest()
+        # Calcula o hash SHA-256 da string gerada.
+        tentativa_hash = hashlib.sha256(tentativa).hexdigest()
 
-        # Verifica se os primeiros 4 caracteres do hash são "0000".
-        return hash_tentativa[:4] == "0000"
+        # Verifica se os primeiros quatro caracteres do hash são iguais a "0000".
+        return tentativa_hash[:4] == "0000"
 
     def valid_chain(self, chain):
         """

@@ -68,6 +68,48 @@ def full_chain():
     return jsonify(response), 200
 
 
+@app.route("/nodes/register", methods=["POST"])
+def register_nodes():
+    # Obtém os dados enviados no corpo da requisição em formato JSON
+    values = request.get_json()
+
+    # Recupera a lista de nós fornecida
+    nodes = values.get("nodes")
+
+    # Verifica se a lista de nós foi fornecida corretamente
+    if nodes is None:
+        return "Erro: Forneça uma lista válida de nós", 400
+
+    # Registra cada nó fornecido na blockchain
+    for node in nodes:
+        blockchain.register_node(node)
+
+    # Resposta confirmando a adição dos novos nós
+    response = {
+        "message": "Novos nós foram adicionados",
+        "total_nodes": list(blockchain.nodes),
+    }
+    return jsonify(response), 201
+
+
+@app.route("/nodes/resolve", methods=["GET"])
+def consensus():
+    # Tenta resolver conflitos na blockchain verificando se há uma cadeia maior e válida
+    substituted = blockchain.resolve_conflicts()
+
+    # Se a cadeia foi substituída por uma cadeia maior, retorna a nova cadeia
+    if substituted:
+        response = {
+            "message": "Nossa cadeia foi substituída",
+            "new_chain": blockchain.chain,
+        }
+    else:
+        # Se não houver substituição, a cadeia atual é a autoritativa
+        response = {"message": "Nossa cadeia é autoritativa", "chain": blockchain.chain}
+
+    return jsonify(response), 200
+
+
 # Se este arquivo for executado diretamente, inicia o servidor Flask
 if __name__ == "__main__":
     # Inicia o servidor na máquina local, ouvindo na porta 5000

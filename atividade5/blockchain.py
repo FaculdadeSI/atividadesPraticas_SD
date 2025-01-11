@@ -42,14 +42,24 @@ class Blockchain:
 
     def new_transaction(self, sender, recipient, amount):
         """
-        Cria uma nova transação para ser adicionada ao próximo bloco minerado.
+        Cria uma nova transação para ser incluída no próximo bloco minerado.
 
         :param sender: Endereço do remetente
         :param recipient: Endereço do destinatário
         :param amount: Valor da transação
-        :return: O índice do bloco que conterá essa transação
+        :return: O índice do bloco que irá conter esta transação
         """
-        pass  # Implementação será adicionada aqui
+        # Adiciona a nova transação à lista de transações pendentes
+        self.current_transactions.append(
+            {
+                "remetente": sender,  # Endereço de quem está enviando
+                "destinatario": recipient,  # Endereço de quem está recebendo
+                "valor": amount,  # Quantia enviada
+            }
+        )
+
+        # Retorna o índice do próximo bloco que conterá esta transação
+        return self.last_block["index"] + 1
 
     @staticmethod
     def hash(block):

@@ -66,3 +66,9 @@ def full_chain():
         "length": len(blockchain.chain),
     }
     return jsonify(response), 200
+
+
+# Se este arquivo for executado diretamente, inicia o servidor Flask
+if __name__ == "__main__":
+    # Inicia o servidor na máquina local, ouvindo na porta 5000
+    app.run(host="0.0.0.0", port=5000)

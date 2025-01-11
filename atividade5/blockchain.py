@@ -97,3 +97,56 @@ class Blockchain:
             proof += 1  # Incrementa a prova a cada iteração.
 
         return proof  # Retorna a nova prova válida encontrada.
+
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        Valida a prova.
+
+        :param last_proof: <int> Prova anterior.
+        :param proof: <int> Prova atual.
+        :return: <bool> Verdadeiro se a prova for válida, Falso caso contrário.
+        """
+        # Concatena a prova anterior e a prova atual em uma string, depois codifica para bytes.
+        tentativa = f"{last_proof}{proof}".encode()
+
+        # Gera o hash SHA-256 da tentativa.
+        hash_tentativa = hashlib.sha256(tentativa).hexdigest()
+
+        # Verifica se os primeiros 4 caracteres do hash são "0000".
+        return hash_tentativa[:4] == "0000"
+
+    def valid_chain(self, chain):
+        """
+        Determina se um blockchain fornecido é válido.
+
+        :param chain: <list> Um blockchain (lista de blocos).
+        :return: <bool> Verdadeiro se o blockchain for válido, Falso caso contrário.
+        """
+        # Começa com o primeiro bloco da cadeia (genesis block).
+        ultimo_bloco = chain[0]
+        indice_atual = 1  # Índice para iterar pelos blocos subsequentes.
+
+        # Itera por todos os blocos na cadeia.
+        while indice_atual < len(chain):
+            bloco = chain[indice_atual]  # Obtém o bloco atual.
+
+            # Exibe os blocos para depuração e entendimento.
+            print(f"Último bloco: {ultimo_bloco}")
+            print(f"Bloco atual: {bloco}")
+            print("\n-----------\n")
+
+            # Verifica se o hash do bloco anterior está correto.
+            if bloco["previous_hash"] != self.hash(ultimo_bloco):
+                return False
+
+            # Verifica se a Prova de Trabalho do bloco atual é válida.
+            if not self.valid_proof(ultimo_bloco["proof"], bloco["proof"]):
+                return False
+
+            # Avança para o próximo bloco.
+            ultimo_bloco = bloco
+            indice_atual += 1
+
+        # Se todos os blocos forem válidos, retorna True.
+        return True

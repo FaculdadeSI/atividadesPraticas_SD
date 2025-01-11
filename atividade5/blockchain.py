@@ -68,13 +68,15 @@ class Blockchain:
 
         :param block: O bloco a ser transformado em hash
         """
-        pass  # Implementação será adicionada aqui
+        # Converte o bloco em uma string ordenada (para consistência no hashing)
+        bloco_string = json.dumps(block, sort_keys=True).encode()
+
+        # Retorna o hash SHA-256 da string do bloco
+        return hashlib.sha256(bloco_string).hexdigest()
 
     @property
     def last_block(self):
         """
         Retorna o último bloco da cadeia.
-
-        :return: O último bloco da blockchain
         """
-        pass  # Implementação será adicionada aqui
+        return self.chain[-1]  # Acessa o último elemento da lista de blocos

@@ -150,3 +150,43 @@ class Blockchain:
 
         # Se todos os blocos forem válidos, retorna True.
         return True
+
+    def resolve_conflicts(self):
+        """
+        Este é o nosso algoritmo de consenso. Ele resolve conflitos
+        substituindo nossa cadeia pela cadeia mais longa encontrada na rede.
+
+        :return: <bool> True se nossa cadeia foi substituída, False caso contrário.
+        """
+        # Obtém os nós vizinhos na rede.
+        vizinhos = self.nodes
+        nova_cadeia = (
+            None  # Inicializa uma variável para armazenar uma nova cadeia válida.
+        )
+
+        # Estamos interessados apenas em cadeias maiores que a nossa.
+        comprimento_maximo = len(self.chain)
+
+        # Solicita e verifica as cadeias de todos os nós na rede.
+        for node in vizinhos:
+            response = requests.get(
+                f"http://{node}/chain"
+            )  # Faz uma requisição HTTP para o nó.
+
+            if response.status_code == 200:  # Verifica se a resposta foi bem-sucedida.
+                comprimento = response.json()[
+                    "length"
+                ]  # Obtém o comprimento da cadeia do nó.
+                cadeia = response.json()["chain"]  # Obtém a cadeia do nó.
+
+                # Verifica se a cadeia do nó é maior e válida.
+                if comprimento > comprimento_maximo and self.valid_chain(cadeia):
+                    comprimento_maximo = comprimento  # Atualiza o comprimento máximo.
+                    nova_cadeia = cadeia  # Atualiza a nova cadeia válida.
+
+        # Substitui nossa cadeia se encontrarmos uma cadeia válida maior que a atual.
+        if nova_cadeia:
+            self.chain = nova_cadeia
+            return True  # Retorna True indicando que a cadeia foi substituída.
+
+        return False  # Retorna False se nenhuma cadeia foi substituída.

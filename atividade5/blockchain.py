@@ -1,7 +1,7 @@
 import hashlib
 import json
+import requests
 from time import time
-from flask import requests
 
 
 class Blockchain:

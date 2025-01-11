@@ -13,6 +13,12 @@ node_identifier = str(uuid4()).replace("-", "")
 blockchain = Blockchain()
 
 
+# Adiciona a rota padrão para a raiz do servidor
+@app.route("/", methods=["GET"])
+def home():
+    return "Welcome to the Blockchain API!"
+
+
 @app.route("/mine", methods=["GET"])
 def mine():
     # Executamos o algoritmo de prova de trabalho para obter a próxima prova...
@@ -113,4 +119,4 @@ def consensus():
 # Se este arquivo for executado diretamente, inicia o servidor Flask
 if __name__ == "__main__":
     # Inicia o servidor na máquina local, ouvindo na porta 5000
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5001)

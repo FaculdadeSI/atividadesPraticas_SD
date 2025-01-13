@@ -15,6 +15,7 @@ node_identifier = str(uuid4()).replace(
 blockchain = Blockchain()
 
 
+# TODO: criei
 # Adiciona a rota padrão para a raiz do servidor
 @app.route("/", methods=["GET"])
 def home():
@@ -30,10 +31,10 @@ def mine():
     cria uma nova transação e adiciona um novo bloco à blockchain.
     """
     # Obtém o último bloco da cadeia
-    ultimo_bloco = blockchain.last_block
+    last_block = blockchain.last_block
 
     # Executa o algoritmo de Prova de Trabalho para encontrar a nova prova
-    prova = blockchain.proof_of_work(ultimo_bloco)
+    proof = blockchain.proof_of_work(last_block)
 
     # Cria uma transação que recompensa o minerador. O remetente é "0", indicando que é uma recompensa.
     blockchain.new_transaction(
@@ -43,16 +44,16 @@ def mine():
     )
 
     # Adiciona o novo bloco à cadeia com a nova prova e o hash do bloco anterior
-    hash_anterior = blockchain.hash(ultimo_bloco)
-    bloco = blockchain.new_block(prova, hash_anterior)
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.new_block(proof, previous_hash)
 
     # Retorna os dados do novo bloco minerado
     response = {
         "message": "Novo Bloco Forjado",  # Mensagem indicando que o bloco foi minerado
-        "index": bloco["index"],  # Índice do bloco na cadeia
-        "transactions": bloco["transactions"],  # Transações incluídas no bloco
-        "proof": bloco["proof"],  # Prova de trabalho que valida o bloco
-        "previous_hash": bloco["previous_hash"],  # Hash do bloco anterior
+        "index": block["index"],  # Índice do bloco na cadeia
+        "transactions": block["transactions"],  # Transações incluídas no bloco
+        "proof": block["proof"],  # Prova de trabalho que valida o bloco
+        "previous_hash": block["previous_hash"],  # Hash do bloco anterior
     }
     return jsonify(response), 200  # Retorna a resposta em formato JSON
 
@@ -129,10 +130,10 @@ def consensus():
     Ele tenta resolver conflitos verificando se há uma cadeia maior e válida na rede.
     """
     # Tenta resolver conflitos e atualizar a cadeia, caso necessário
-    substituted = blockchain.resolve_conflicts()
+    replaced = blockchain.resolve_conflicts()
 
     # Se a cadeia foi substituída por uma maior e válida, retorna a nova cadeia
-    if substituted:
+    if replaced:
         response = {
             "message": "Nossa cadeia foi substituída",  # Mensagem indicando que a cadeia foi substituída
             "new_chain": blockchain.chain,  # A nova cadeia maior e válida

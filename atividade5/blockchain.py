@@ -52,9 +52,9 @@ class Blockchain:
         # Adiciona a nova transação à lista de transações pendentes
         self.current_transactions.append(
             {
-                "remetente": sender,  # Endereço de quem está enviando
-                "destinatario": recipient,  # Endereço de quem está recebendo
-                "valor": amount,  # Quantia enviada
+                "sender": sender,  # Endereço de quem está enviando
+                "recipient": recipient,  # Endereço de quem está recebendo
+                "amount": amount,  # Quantia enviada
             }
         )
 
@@ -68,10 +68,10 @@ class Blockchain:
         :param block: O bloco a ser transformado em hash
         :return: O hash do bloco
         """
-        bloco_string = json.dumps(
+        block_string = json.dumps(
             block, sort_keys=True
         ).encode()  # Converte o bloco para uma string
-        return hashlib.sha256(bloco_string).hexdigest()  # Retorna o hash SHA-256
+        return hashlib.sha256(block_string).hexdigest()  # Retorna o hash SHA-256
 
     @property
     def last_block(self):
@@ -89,19 +89,19 @@ class Blockchain:
         :return: A nova prova encontrada.
         """
         # Obtém a prova anterior do último bloco.
-        ultima_prova = last_block["proof"]
+        last_proof = last_block["proof"]
 
         # Calcula o hash do último bloco.
-        ultimo_hash = self.hash(last_block)
+        last_hash = self.hash(last_block)
 
         # Inicializa a nova prova como 0.
-        prova = 0
+        proof = 0
 
         # Encontra a nova prova válida
-        while self.valid_proof(ultima_prova, prova, ultimo_hash) is False:
-            prova += 1
+        while self.valid_proof(last_proof, proof, last_hash) is False:
+            proof += 1
 
-        return prova  # Retorna a nova prova encontrada
+        return proof  # Retorna a nova prova encontrada
 
     @staticmethod
     def valid_proof(last_proof, proof, last_hash):
@@ -113,14 +113,12 @@ class Blockchain:
         :param last_hash: O hash do último bloco.
         :return: True se a prova for válida, False caso contrário.
         """
-        tentativa = (
+        guess = (
             f"{last_proof}{proof}{last_hash}".encode()
         )  # Concatena as provas e o hash
-        tentativa_hash = hashlib.sha256(
-            tentativa
-        ).hexdigest()  # Calcula o hash da tentativa
+        guess_hash = hashlib.sha256(guess).hexdigest()  # Calcula o hash da tentativa
 
-        return tentativa_hash[:4] == "0000"  # Verifica se o hash começa com 4 zeros
+        return guess_hash[:4] == "0000"  # Verifica se o hash começa com 4 zeros
 
     def valid_chain(self, chain):
         """
@@ -129,29 +127,30 @@ class Blockchain:
         :param chain: Um blockchain (lista de blocos).
         :return: True se o blockchain for válido, False caso contrário.
         """
-        ultimo_bloco = chain[0]  # Começa com o primeiro bloco da cadeia (genesis block)
-        indice_atual = 1  # Índice para iterar pelos blocos subsequentes
+        last_block = chain[0]  # Começa com o primeiro bloco da cadeia (genesis block)
+        current_index = 1  # Índice para iterar pelos blocos subsequentes
 
         # Itera pelos blocos da cadeia
-        while indice_atual < len(chain):
-            bloco = chain[indice_atual]  # Obtém o bloco atual.
+        while current_index < len(chain):
+            block = chain[current_index]  # Obtém o bloco atual.
 
             # Exibe os blocos para depuração e entendimento.
-            print(f"Último bloco: {ultimo_bloco}")
-            print(f"Bloco atual: {bloco}")
+            print(f"Último bloco: {last_block}")
+            print(f"Bloco atual: {block}")
             print("\n-----------\n")
 
             # Verifica se o hash do bloco anterior está correto
-            if bloco["previous_hash"] != self.hash(ultimo_bloco):
+            if block["previous_hash"] != self.hash(last_block):
                 return False
 
             # Verifica se a Prova de Trabalho do bloco atual é válida
-            if not self.valid_proof(ultimo_bloco["proof"], bloco["proof"]):
+            last_hash = self.hash(last_block)
+            if not self.valid_proof(last_block["proof"], block["proof"], last_hash):
                 return False
 
             # Avança para o próximo bloco.
-            ultimo_bloco = bloco
-            indice_atual += 1
+            last_block = block
+            current_index += 1
 
         return True  # Se todos os blocos forem válidos, retorna True
 
@@ -161,37 +160,38 @@ class Blockchain:
 
         :return: True se nossa cadeia foi substituída, False caso contrário.
         """
-        vizinhos = self.nodes  # Obtém os nós vizinhos na rede
-        nova_cadeia = (
+        neighbours = self.nodes  # Obtém os nós vizinhos na rede
+        new_chain = (
             None  # Inicializa uma variável para armazenar uma nova cadeia válida
         )
-        comprimento_maximo = len(self.chain)  # Comprimento máximo da cadeia atual
 
         # Estamos interessados apenas em cadeias maiores que a nossa.
-        comprimento_maximo = len(self.chain)
+        max_length = len(self.chain)
 
+        # TODO: response = requests.get(f'http://{node}/chain')
         # Solicita e verifica as cadeias de todos os nós na rede.
-        for node in vizinhos:
+        for node in neighbours:
             response = requests.get(
-                f"{node}/chain"
+                f"http://{node}/chain"
             )  # Faz uma requisição HTTP para o nó
 
             if response.status_code == 200:  # Se a resposta for bem-sucedida
-                comprimento = response.json()["length"]  # Obtém o comprimento da cadeia
-                cadeia = response.json()["chain"]  # Obtém a cadeia do nó
+                length = response.json()["length"]  # Obtém o comprimento da cadeia
+                chain = response.json()["chain"]  # Obtém a cadeia do nó
 
                 # Verifica se a cadeia do nó é maior e válida
-                if comprimento > comprimento_maximo and self.valid_chain(cadeia):
-                    comprimento_maximo = comprimento  # Atualiza o comprimento máximo
-                    nova_cadeia = cadeia  # Atualiza a nova cadeia válida
+                if length > max_length and self.valid_chain(chain):
+                    max_length = length  # Atualiza o comprimento máximo
+                    new_chain = chain  # Atualiza a nova cadeia válida
 
         # Substitui a cadeia local pela nova cadeia mais longa encontrada
-        if nova_cadeia:
-            self.chain = nova_cadeia
+        if new_chain:
+            self.chain = new_chain
             return True  # A cadeia foi substituída
 
         return False  # Nenhuma cadeia foi substituída
 
+    # TODO: adicionei para funcionar
     def register_node(self, node):
         """
         Adiciona um novo nó à lista de nós.

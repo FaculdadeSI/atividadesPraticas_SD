@@ -168,21 +168,28 @@ class Blockchain:
         # Estamos interessados apenas em cadeias maiores que a nossa.
         max_length = len(self.chain)
 
-        # TODO: response = requests.get(f'http://{node}/chain')
         # Solicita e verifica as cadeias de todos os nós na rede.
         for node in neighbours:
-            response = requests.get(
-                f"http://{node}/chain"
-            )  # Faz uma requisição HTTP para o nó
+            # Verifica se o 'node' já inclui o protocolo 'http://', se não, adiciona
+            if not node.startswith("http://"):
+                node = f"http://{node}"
 
-            if response.status_code == 200:  # Se a resposta for bem-sucedida
-                length = response.json()["length"]  # Obtém o comprimento da cadeia
-                chain = response.json()["chain"]  # Obtém a cadeia do nó
+            try:
+                response = requests.get(
+                    f"{node}/chain"
+                )  # Faz uma requisição HTTP para o nó
 
-                # Verifica se a cadeia do nó é maior e válida
-                if length > max_length and self.valid_chain(chain):
-                    max_length = length  # Atualiza o comprimento máximo
-                    new_chain = chain  # Atualiza a nova cadeia válida
+                if response.status_code == 200:  # Se a resposta for bem-sucedida
+                    length = response.json()["length"]  # Obtém o comprimento da cadeia
+                    chain = response.json()["chain"]  # Obtém a cadeia do nó
+
+                    # Verifica se a cadeia do nó é maior e válida
+                    if length > max_length and self.valid_chain(chain):
+                        max_length = length  # Atualiza o comprimento máximo
+                        new_chain = chain  # Atualiza a nova cadeia válida
+            except requests.exceptions.RequestException as e:
+                print(f"Erro ao tentar acessar o nó {node}: {e}")
+                continue  # Continua para o próximo nó em caso de erro
 
         # Substitui a cadeia local pela nova cadeia mais longa encontrada
         if new_chain:

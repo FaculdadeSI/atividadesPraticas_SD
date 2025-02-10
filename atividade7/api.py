@@ -2,9 +2,11 @@ from urllib import request
 from uuid import uuid4
 from blockchain import Blockchain
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 # Cria uma instância do aplicativo Flask para criar a API
 app = Flask(__name__)
+CORS(app)
 
 # Gera um identificador único global para este nó (usado para distinguir entre diferentes nós na rede)
 node_identifier = str(uuid4()).replace(

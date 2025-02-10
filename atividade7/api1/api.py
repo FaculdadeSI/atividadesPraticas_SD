@@ -1,13 +1,19 @@
+import sys
+import os
+
+# Adiciona o diretório pai ao sys.path para buscar o arquivo blockchain.py
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from blockchain import Blockchain
 from urllib import request
 from uuid import uuid4
-from blockchain import Blockchain
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
 
 # Cria uma instância do aplicativo Flask para criar a API
 app = Flask(__name__)
 CORS(app)
-
 
 # Gera um identificador único global para este nó (usado para distinguir entre diferentes nós na rede)
 node_identifier = str(uuid4()).replace(
@@ -151,12 +157,12 @@ def consensus():
 # Se este arquivo for executado diretamente, inicia o servidor Flask
 if __name__ == "__main__":
     # Registra os nós automaticamente ao iniciar a API
-    known_nodes = ["http://127.0.0.1:5001", "http://127.0.0.1:5002"]
+    known_nodes = ["http://127.0.0.1:5002", "http://127.0.0.1:5003"]
     blockchain.register_node(
-        "http://127.0.0.1:5003"
+        "http://127.0.0.1:5001"
     )  # Garante que o próprio nó está registrado
     for node in known_nodes:
         blockchain.register_node(node)
 
     print(f"Nós registrados automaticamente: {list(blockchain.nodes)}")
-    app.run(host="0.0.0.0", port=5003)
+    app.run(host="0.0.0.0", port=5001)

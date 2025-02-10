@@ -150,5 +150,13 @@ def consensus():
 
 # Se este arquivo for executado diretamente, inicia o servidor Flask
 if __name__ == "__main__":
-    # Inicia o servidor na máquina local, ouvindo na porta 5001
+    # Registra os nós automaticamente ao iniciar a API
+    known_nodes = ["http://127.0.0.1:5001", "http://127.0.0.1:5002"]
+    blockchain.register_node(
+        "http://127.0.0.1:5003"
+    )  # Garante que o próprio nó está registrado
+    for node in known_nodes:
+        blockchain.register_node(node)
+
+    print(f"Nós registrados automaticamente: {list(blockchain.nodes)}")
     app.run(host="0.0.0.0", port=5003)

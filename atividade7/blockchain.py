@@ -168,6 +168,7 @@ class Blockchain:
         # Estamos interessados apenas em cadeias maiores que a nossa.
         max_length = len(self.chain)
 
+        # TODO: response = requests.get(f'http://{node}/chain')
         # Solicita e verifica as cadeias de todos os nós na rede.
         for node in neighbours:
             # Verifica se o 'node' já inclui o protocolo 'http://', se não, adiciona

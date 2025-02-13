@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casa Inteligente</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>🏠 Aquecedor - Casa Inteligente</h1>
+      </header>
+      <main class="main">
+        <div class="status">
+          <div class="status-item">
+            <i class="fas fa-thermometer-half"></i>
+            <p>
+              <strong>Temperatura:</strong> <span id="temperature">--</span>
+            </p>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-fire"></i>
+            <p>
+              <strong>Aquecedor:</strong> <span id="heater-status">--</span>
+            </p>
+          </div>
+        </div>
+        <div class="controls">
+          <button id="toggle-heater" class="button" onclick="toggleHeater()">
+            Carregando...
+          </button>
+        </div>
+      </main>
+      <footer class="footer">
+        <p>Desenvolvido por Gabrielle Fonseca - 0072379</p>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

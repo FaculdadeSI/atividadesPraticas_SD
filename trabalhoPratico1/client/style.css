@@ -1,0 +1,136 @@
+/* Reset básico para remover margens e espaçamentos padrão */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilização do corpo da página */
+body {
+  font-family: "Arial", sans-serif; /* Fonte padrão para o texto */
+  background-color: #e8f5ff; /* Cor de fundo azul claro suave */
+  display: flex; /* Usa flexbox para centralizar o conteúdo */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 100vh; /* Altura total da janela */
+}
+
+/* Container principal */
+.container {
+  display: flex;
+  flex-direction: column; /* Disposição vertical do conteúdo */
+  justify-content: space-between; /* Espaço entre o conteúdo e o rodapé */
+  align-items: center; /* Centraliza horizontalmente */
+  background-color: #ffffff; /* Fundo branco */
+  padding: 40px 60px; /* Espaçamento interno */
+  border-radius: 15px; /* Cantos arredondados */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 100%; /* Largura completa */
+  max-width: 600px; /* Limita a largura máxima */
+  min-height: 450px; /* Define uma altura mínima */
+  text-align: center; /* Centraliza o texto */
+  animation: fadeIn 0.8s ease-in-out; /* Animação de entrada */
+}
+
+/* Animação de fade-in para o container */
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Começa invisível */
+    transform: scale(0.9); /* Escala reduzida */
+  }
+  to {
+    opacity: 1; /* Fica visível */
+    transform: scale(1); /* Tamanho original */
+  }
+}
+
+/* Estilo do cabeçalho */
+.header {
+  width: 100%;
+  text-align: center; /* Centraliza o cabeçalho */
+}
+
+.header h1 {
+  font-size: 30px; /* Tamanho do texto do título */
+  color: #333; /* Cor do texto */
+  margin-bottom: 20px; /* Espaço abaixo do título */
+  line-height: 1.2; /* Altura da linha */
+  white-space: nowrap; /* Evita quebra de linha */
+  overflow: hidden; /* Esconde conteúdo que ultrapassa o limite */
+}
+
+/* Área principal do conteúdo */
+.main {
+  display: flex;
+  flex-direction: column; /* Disposição vertical do conteúdo */
+  align-items: center; /* Centraliza horizontalmente */
+  justify-content: center; /* Centraliza verticalmente */
+  flex-grow: 1; /* Faz com que a seção ocupe o espaço restante */
+}
+
+/* Estilização da seção de status */
+.status {
+  margin-bottom: 30px; /* Espaçamento inferior maior */
+}
+
+.status-item {
+  display: flex;
+  align-items: center; /* Alinha ícones e textos verticalmente */
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  margin-bottom: 20px; /* Espaçamento entre os itens */
+}
+
+.status-item i {
+  font-size: 40px; /* Aumenta o tamanho do ícone */
+  margin-right: 15px; /* Espaço entre o ícone e o texto */
+}
+
+.status-item p {
+  font-size: 20px; /* Tamanho do texto */
+  color: #555; /* Cor do texto */
+  margin: 0; /* Remove margens padrão */
+}
+
+/* Estilização dos botões de controle */
+.controls .button {
+  padding: 16px 36px; /* Tamanho do botão */
+  font-size: 20px; /* Tamanho do texto */
+  cursor: pointer; /* Indica que o botão é clicável */
+  border: none; /* Remove a borda padrão */
+  border-radius: 25px; /* Botão arredondado */
+  color: white; /* Cor do texto */
+  background: linear-gradient(45deg, #4caf50, #45a049); /* Gradiente verde */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra do botão */
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s; /* Efeitos suaves */
+  margin-top: 20px; /* Espaço superior entre o botão e outros elementos */
+}
+
+/* Efeito ao passar o mouse no botão */
+.controls .button:hover {
+  background: linear-gradient(
+    45deg,
+    #45a049,
+    #3e8e41
+  ); /* Gradiente mais escuro */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Sombra mais intensa */
+}
+
+/* Efeito ao pressionar o botão */
+.controls .button:active {
+  transform: scale(0.95); /* Reduz ligeiramente o tamanho */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); /* Sombra reduzida */
+}
+
+/* Estilização do rodapé */
+.footer {
+  font-size: 14px; /* Tamanho do texto do rodapé */
+  color: #666; /* Cor do texto */
+  margin-top: 20px; /* Espaço superior entre o rodapé e o conteúdo */
+  width: 100%; /* Largura completa */
+  text-align: center; /* Centraliza o texto */
+}
+
+.footer p {
+  font-size: 14px; /* Tamanho do texto */
+  color: #888; /* Cor do texto */
+}
